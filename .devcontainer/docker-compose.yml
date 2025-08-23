@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspaces/${COMPOSE_PROJECT_NAME}:cached
+    # Keep the container running
+    command: sleep infinity
+    # Required for Electron apps in Dev Containers
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
