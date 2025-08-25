@@ -1,27 +1,27 @@
-# Use the custom Dockerfile in the same directory
+# Tell Gitpod to build and use the Dockerfile in the same directory
 image:
   file: .gitpod.Dockerfile
 
 # Define the tasks to run when the workspace starts
 tasks:
-  - name: Start VNC Server
-    # This command runs before you get access, setting up the VNC server
+  - name: VNC Desktop
+    # This 'before' command runs in the background to set up the VNC server
     before: |
-      # Set a password for VNC (using a default "gitpod" here)
+      # Set a default VNC password to "gitpod"
+      mkdir -p "$HOME/.vnc"
       echo "gitpod" | vncpasswd -f > "$HOME/.vnc/passwd"
       chmod 600 "$HOME/.vnc/passwd"
-
-      # Start the VNC server with the XFCE desktop
-      # The '-localhost no' flag is crucial for it to be accessible
-      vncserver :1 -localhost no -geometry 1920x1080 -xstartup /usr/bin/startxfce4
-    # This command runs in the main terminal after startup
+      # Start the VNC server with the XFCE desktop on display :1
+      # The '-localhost no' flag is crucial for it to be accessible from the browser
+      vncserver :1 -localhost no -geometry 1680x1050 -xstartup /usr/bin/startxfce4
+    # This 'command' runs in the main terminal after setup is complete
     command: |
-      echo "Your VNC desktop is running."
-      echo "Click the 'Ports' tab and open the 'Desktop (6080)' URL in a new tab."
-      # Start the web client that bridges the web port to the VNC server
+      echo "Your VNC desktop is now running."
+      echo "Click the 'Ports' tab and open the 'Desktop (6080)' URL in a new tab to access it."
+      # This starts the web client that bridges the web port to the VNC server
       websockify --web=/usr/share/novnc/ 6080 localhost:5901
 
-# Expose the port for the web-based VNC client
+# Expose the port for the web-based VNC client and open it in a browser
 ports:
   - name: Desktop
     port: 6080
